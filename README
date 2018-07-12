@@ -1,20 +1,8 @@
-This code read the 2018 June TB rechit ntuple to produce Shower Shape variable
+This code read the 2018 June TB (Updated) rechit ntuple
 
-input data file path:
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v8/
-input MC file path:
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/sim_ntuples/v6
+input data file path: output_root/
 
 To Run:
-(Data -> For example run 316)
-
 make
-ls /eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v8/ntuple_316.root > input.txt
-./makePlots or ./makePlots 1
-
-(MC)
-make
-ls /eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/sim_ntuples/v6/ntuple_sim_pdgID11_beamMomentum100.0_listFTFP_BERT_EMM.root > input.txt
-./makePlots 0
-
-The output file will be store in output_root
+ls output_root/whateveryouhave.root > input.txt
+./makePlots
