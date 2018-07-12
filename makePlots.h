@@ -17,10 +17,6 @@
 
 using namespace std;
 
-const int kHGCalLayerHOffset = 19;
-const int kHGCalLayerHMask   = 0x7F;
-const int kHGCalCellHMask    = 0xFF;
-
 class makePlots{
  public:
   makePlots();
@@ -128,27 +124,6 @@ class makePlots{
    Float_t         humidity_air;
    Float_t         temperature_air;
    
-   /*MC*/
-   // Declaration of leaf types
-   vector<float>   *simHitLayEn1EE;
-   vector<float>   *simHitLayEn2EE;
-   vector<float>   *simHitLayEn1FH;
-   vector<float>   *simHitLayEn2FH;
-   vector<float>   *simHitLayEn1BH;
-   vector<float>   *simHitLayEn2BH;
-   Double_t        xBeam;
-   Double_t        yBeam;
-   Double_t        zBeam;
-   Double_t        pBeam;
-   vector<unsigned int> *simHitCellIdEE;
-   vector<float>   *simHitCellEnEE;
-   vector<unsigned int> *simHitCellIdFH;
-   vector<float>   *simHitCellEnFH;
-   vector<unsigned int> *simHitCellIdBH;
-   vector<float>   *simHitCellEnBH;
-   vector<unsigned int> *simHitCellIdBeam;
-   vector<float>   *simHitCellEnBeam;
-
 };
 
 #endif

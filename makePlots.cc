@@ -347,7 +347,7 @@ void makePlots::Loop(){
     if(ev %10000 == 0) cout << "Processing event: "<< ev << endl;
     GetData(ev);
     int Nhits;
-    Nhits = Is_Data ? NRechits : (int)simHitCellIdEE->size();
+    Nhits = NRechits;
 
     // Event Selection
     if (Nhits < 200) continue;
@@ -444,7 +444,7 @@ void makePlots::Event_Display(){
     
     GetData(ev);
     int Nhits;
-    Nhits = Is_Data ? NRechits : (int)simHitCellIdEE->size();
+    Nhits = NRechits;
     //cout << Nhits << endl;
     int layer;
     double posx,posy,posz,energy;
