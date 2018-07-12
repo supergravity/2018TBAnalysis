@@ -5,6 +5,9 @@ input data file path:
 input MC file path:
 /eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/sim_ntuples/v6
 
+For the run information please refer to:
+https://docs.google.com/spreadsheets/d/1FlwthMixJHmHVBguYSbw5mIeBo2tF7rFJPTYLTNI9Vs/edit#gid=0
+
 To Run:
 (Data -> For example run 316)
 
