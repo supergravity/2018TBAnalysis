@@ -2,6 +2,8 @@ This code read the 2018 June TB (Updated) rechit ntuple
 
 For the run information please refer to:
 https://docs.google.com/spreadsheets/d/1FlwthMixJHmHVBguYSbw5mIeBo2tF7rFJPTYLTNI9Vs/edit#gid=0
+Or
+directory run_list
 
 input data file path: output_root/
 
