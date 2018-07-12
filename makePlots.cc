@@ -472,7 +472,7 @@ void makePlots::Event_Display(){
     evtdis[iL]->Draw("colz");
   }
   //c1->Update();
-  sprintf(title,"result/evt_dis/evt_display_%iavg.png",counts);
+  sprintf(title,"plots/evt_dis/evt_display_%iavg.png",counts);
   //getchar();
   //c1->Update();
 
@@ -481,7 +481,7 @@ void makePlots::Event_Display(){
   TCanvas *c2 = new TCanvas();
   firstL->Draw("samecolz");
   c2->Update();
-  sprintf(title,"result/evt_dis/evt_display_1st.png");
+  sprintf(title,"plots/evt_dis/evt_display_1st.png");
   c2->SaveAs(title);
   cout << "End?!" << endl;
   //getchar();
