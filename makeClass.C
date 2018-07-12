@@ -5,20 +5,12 @@ void makeClass(){
   gROOT->Reset();
   gROOT->SetStyle("Plain");
   TApplication *a = new TApplication("a", 0, 0);
-  bool data = 1;
-  if(data){
-    TFile f("./root_data/data/v8/ntuple_245.root");
-    TTree *tt = (TTree *) f.Get("rechitntupler/hits");
-    TTree *tt2 = (TTree *) f.Get("trackimpactntupler/impactPoints");
-    TTree *tt3 = (TTree *) f.Get("metadatantupler/meta");
+    TFile f("output_root/MC_100GeV_Ele.root");
+    TTree *tt = (TTree *) f.Get("hits");
+    TTree *tt2 = (TTree *) f.Get("impactPoints");
+    TTree *tt3 = (TTree *) f.Get("rechit_var");
     
     tt->MakeClass("rechit");
     tt2->MakeClass("trackimpact");
-    tt3->MakeClass("metadata");    
-  }
-  else{
-    TFile f("root_data/data/mc_rec/ntuple_sim_pdgID11_beamMomentum100.0_listFTFP.root");
-    TTree *tt = (TTree *) f.Get("");
-    tt->MakeClass("MC");
-  }
+    tt3->MakeClass("rechit_var");    
 }

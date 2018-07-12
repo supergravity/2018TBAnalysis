@@ -1,1 +1,1 @@
-root_data/data/mc_rec/ntuple_sim_pdgID11_beamMomentum100.0_listFTFP_BERT_EMM.root
+output_root/MC_100GeV_Ele.root

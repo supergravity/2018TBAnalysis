@@ -17,26 +17,19 @@
 
 using namespace std;
 
-const int kHGCalLayerHOffset = 19;
-const int kHGCalLayerHMask   = 0x7F;
-const int kHGCalCellHMask    = 0xFF;
-
 class makePlots{
  public:
   makePlots();
   makePlots( TChain *c1,TChain *c2,TChain *c3,string filename );
-  makePlots( TChain *c1,TChain *c2,string filename );
  
   ~makePlots();
   
   void Loop();
-  void Event_Display();
-  void NtupleMaker();
+  void Event_Display(); //Actually shows the average over some events
+
   
   //member
-  bool Is_Data;
   int  beamE;
-  int  runN; //0 for MC
   int  PID; // 0 for electron, 1 for pion, 2 for muon
   string beam_str; // "Ele","Pi","Mu"
 
@@ -48,8 +41,7 @@ class makePlots{
   TFile        *Inputfile;
   TTree        *T_Rechit;
   TTree        *T_DWC;
-  TTree        *T_Meta;
-  TTree        *T_MC;
+  TTree        *T_rechit_var;
   int          nevents;
   
   // Mainframe functions
@@ -114,41 +106,20 @@ class makePlots{
    Double_t        b_x;
    Double_t        b_y;
 
-   // TBD
-
-   // For metadata
-   Int_t           configuration;
-   Float_t         biasCurrentCh0;
-   Float_t         biasCurrentCh1;
-   Float_t         biasCurrentCh2;
-   Float_t         biasCurrentCh3;
-   Float_t         humidity_RHDP4;
-   Float_t         TCassette07;
-   Float_t         tablePositionY;
-   Float_t         humidity_air;
-   Float_t         temperature_air;
+   // For rechit_var
+   vector<vector<double> > *hit_mip;
+   vector<vector<double> > *hit_x;
+   vector<vector<double> > *hit_y;
+   vector<vector<double> > *hit_z;
+   Int_t           layerNhit[28];
+   Double_t        totalE;
+   Double_t        layerE[28];
+   Double_t        layerE1[28];
+   Double_t        layerE7[28];
+   Double_t        layerE19[28];
+   Double_t        layerE37[28];
    
-   /*MC*/
-   // Declaration of leaf types
-   vector<float>   *simHitLayEn1EE;
-   vector<float>   *simHitLayEn2EE;
-   vector<float>   *simHitLayEn1FH;
-   vector<float>   *simHitLayEn2FH;
-   vector<float>   *simHitLayEn1BH;
-   vector<float>   *simHitLayEn2BH;
-   Double_t        xBeam;
-   Double_t        yBeam;
-   Double_t        zBeam;
-   Double_t        pBeam;
-   vector<unsigned int> *simHitCellIdEE;
-   vector<float>   *simHitCellEnEE;
-   vector<unsigned int> *simHitCellIdFH;
-   vector<float>   *simHitCellEnFH;
-   vector<unsigned int> *simHitCellIdBH;
-   vector<float>   *simHitCellEnBH;
-   vector<unsigned int> *simHitCellIdBeam;
-   vector<float>   *simHitCellEnBeam;
-
+   
 };
 
 #endif

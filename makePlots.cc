@@ -18,9 +18,9 @@
 
 //Constructor
 makePlots::makePlots(){}
-makePlots::makePlots( TChain *c1,TChain *c2,TChain *c3,string filename ):T_Rechit(c1),T_DWC(c2),T_Meta(c3)
+makePlots::makePlots( TChain *c1,TChain *c2,TChain *c3,string filename ):T_Rechit(c1),T_DWC(c2),T_rechit_var(c3)
 {
-  cout << "Data: Constructor of makePlot ... \n\n" << endl;
+  cout << "Constructor of makePlot ... \n\n" << endl;
   fname = filename;
   // Set object pointer(Data)
   rechit_detid = 0;
@@ -53,42 +53,12 @@ makePlots::makePlots( TChain *c1,TChain *c2,TChain *c3,string filename ):T_Rechi
   rechit_timeMaxLG = 0;
   rechit_toaRise = 0;
   rechit_toaFall = 0;
-  
-}
-makePlots::makePlots( TChain *c1,TChain *c2,string filename ):T_Rechit(c1),T_DWC(c2){
-  cout << "MC: Constructor of makePlot ... \n\n" << endl;
-    fname = filename;
-  // Set object pointer(Data)
-  rechit_detid = 0;
-  rechit_module = 0;
-  rechit_layer = 0;
-  rechit_chip = 0;
-  rechit_channel = 0;
-  rechit_type = 0;
-  rechit_x = 0;
-  rechit_y = 0;
-  rechit_z = 0;
-  rechit_iu = 0;
-  rechit_iv = 0;
-  rechit_energy = 0;
-  rechit_energy_noHG = 0;
-  rechit_amplitudeHigh = 0;
-  rechit_amplitudeLow = 0;
-  rechit_hg_goodFit = 0;
-  rechit_lg_goodFit = 0;
-  rechit_hg_saturated = 0;
-  rechit_lg_saturated = 0;
-  rechit_fully_calibrated = 0;
-  rechit_TS2High = 0;
-  rechit_TS2Low = 0;
-  rechit_TS3High = 0;
-  rechit_TS3Low = 0;
-  rechit_Tot = 0;
-  rechit_time = 0;
-  rechit_timeMaxHG = 0;
-  rechit_timeMaxLG = 0;
-  rechit_toaRise = 0;
-  rechit_toaFall = 0;
+
+  //Rechit_var
+  hit_mip = 0;
+  hit_x = 0;
+  hit_y = 0;
+  hit_z = 0;
 
 }
 
@@ -102,10 +72,6 @@ makePlots::~makePlots()
 void makePlots::Init(){
 
   nevents = T_Rechit->GetEntries();
-  if(Is_Data)
-    cout << "(Data)Nevents: "<< nevents << endl;
-  else
-    cout << "(MC)Nevents: "<< nevents << endl;
 
   T_Rechit->SetBranchAddress("event", &event);
   T_Rechit->SetBranchAddress("run", &run);
@@ -156,18 +122,20 @@ void makePlots::Init(){
   T_DWC->SetBranchAddress("b_x", &b_x);
   T_DWC->SetBranchAddress("b_y", &b_y);
 
-  if(Is_Data){
-    T_Meta->SetBranchAddress("configuration", &configuration);
-    T_Meta->SetBranchAddress("biasCurrentCh0", &biasCurrentCh0);
-    T_Meta->SetBranchAddress("biasCurrentCh1", &biasCurrentCh1);
-    T_Meta->SetBranchAddress("biasCurrentCh2", &biasCurrentCh2);
-    T_Meta->SetBranchAddress("biasCurrentCh3", &biasCurrentCh3);
-    T_Meta->SetBranchAddress("humidity_RHDP4", &humidity_RHDP4);
-    T_Meta->SetBranchAddress("TCassette07", &TCassette07);
-    T_Meta->SetBranchAddress("tablePositionY", &tablePositionY);
-    T_Meta->SetBranchAddress("humidity_air", &humidity_air);
-    T_Meta->SetBranchAddress("temperature_air", &temperature_air);}
+  
 
+  T_rechit_var->SetBranchAddress("hit_mip", &hit_mip);
+  T_rechit_var->SetBranchAddress("hit_x", &hit_x);
+  T_rechit_var->SetBranchAddress("hit_y", &hit_y);
+  T_rechit_var->SetBranchAddress("hit_z", &hit_z);
+  T_rechit_var->SetBranchAddress("layerNhit", layerNhit);
+  T_rechit_var->SetBranchAddress("totalE", &totalE);
+  T_rechit_var->SetBranchAddress("layerE", layerE);
+  T_rechit_var->SetBranchAddress("layerE1", layerE1);
+  T_rechit_var->SetBranchAddress("layerE7", layerE7);
+  T_rechit_var->SetBranchAddress("layerE19", layerE19);
+  T_rechit_var->SetBranchAddress("layerE37", layerE37);
+  
   Init_Runinfo();
 }
 void makePlots::Init_Runinfo(){
@@ -186,21 +154,15 @@ void makePlots::Init_Runinfo(){
     cout << "unknown PDGID QQ" << endl;
     beam_str = "??";
     PID = -1;}
-  if(Is_Data)
-    runN = run;
-  else
-    runN = 0;
+
   cout << beam_str.c_str()  << " , "<< beamE << "GeV\n" << endl;
 }
 
 void makePlots::GetData(int evt){
-  if(Is_Data){
-    T_Rechit-> GetEntry(evt);
-    T_DWC   -> GetEntry(evt);
-    T_Meta  -> GetEntry(evt);}
-  else{
-    T_Rechit-> GetEntry(evt);
-    T_DWC   -> GetEntry(evt);}
+
+    T_Rechit      -> GetEntry(evt);
+    T_DWC         -> GetEntry(evt);
+    T_rechit_var  -> GetEntry(evt);
 }
 
 void makePlots::Getinfo(int ihit,int &layer,double &x, double &y,double &z,double &ene){
@@ -211,208 +173,62 @@ void makePlots::Getinfo(int ihit,int &layer,double &x, double &y,double &z,doubl
     ene   = rechit_energy->at(ihit);
 }
 
-void makePlots::NtupleMaker(){
-  int NLAYER = 28;
-  double ENEPERMIP = 86.5e-06; //(GeV) Based on 150GeV muon for 300um Si
-  
-  Init();
-  char title[50];
-  if(Is_Data)
-    sprintf(title,"output_root/Run%i_%iGeV_%s.root",runN,beamE,beam_str.c_str());
-  else
-    sprintf(title,"output_root/MC_%iGeV_%s.root",beamE,beam_str.c_str());
-
-  cout << "output file: " << title << endl;
-  TFile outf(title,"recreate");
-  TTree *outT1 = T_Rechit->CopyTree("");
-  TTree *outT2 = T_DWC->CopyTree("");
-  TTree *outT3 = new TTree("rechit_var","rechit_var");
-  
-  vector<vector<double> > hit_tmp(NLAYER);
-  vector<vector<double> > hit_x(NLAYER);
-  vector<vector<double> > hit_y(NLAYER);
-  vector<vector<double> > hit_z(NLAYER);
-  int Nhits;
-  int layerNhit[NLAYER];
-  double totalE;
-  double layerE[NLAYER];
-  double E_1[NLAYER];
-  double E_7[NLAYER];
-  double E_19[NLAYER];
-  double E_37[NLAYER];
-
-
-  outT3->Branch("hit_mip","std::vector< std::vector<double> >",&hit_tmp);
-  outT3->Branch("hit_x","std::vector< std::vector<double> >",&hit_x);
-  outT3->Branch("hit_y","std::vector< std::vector<double> >",&hit_y);
-  outT3->Branch("hit_z","std::vector< std::vector<double> >",&hit_z);
-  outT3->Branch("layerNhit",layerNhit,"layerNhit[28]/I");
-  outT3->Branch("totalE",&totalE,"totalE/D");
-  outT3->Branch("layerE",layerE,"layerE[28]/D");
-  outT3->Branch("layerE1",E_1,"layerE1[28]/D");
-  outT3->Branch("layerE7",E_7,"layerE7[28]/D");
-  outT3->Branch("layerE19",E_19,"layerE19[28]/D");
-  outT3->Branch("layerE37",E_37,"layerE37[28]/D");
-
-  
-  
-  for(int ev = 0; ev < nevents; ++ev){
-    if(ev %10000 == 0) cout << "Processing event: "<< ev << endl;
-    GetData(ev);
-    Nhits = NRechits;
-    
-    for(int iL = 0; iL < NLAYER ; ++iL){
-      hit_tmp[iL].clear();
-      hit_x[iL].clear();
-      hit_y[iL].clear();
-      hit_z[iL].clear();
-      layerE[iL] = 0;
-      layerNhit[iL] = 0;
-      E_1[iL] = 0;
-      E_7[iL] = 0;
-      E_19[iL] = 0;
-      E_37[iL] = 0;}
-    
-    int layer;
-    double posx,posy,posz,energy;
-    totalE = 0;
-    
-    for(int h = 0; h < Nhits ; ++h){
-      
-      Getinfo(h,layer,posx,posy,posz,energy);
-      totalE += energy;
-      layerNhit[layer-1]++;
-      hit_tmp[layer-1].push_back(energy);
-      hit_x[layer-1].push_back(posx);
-      hit_y[layer-1].push_back(posy);
-      hit_z[layer-1].push_back(posz);}
- 
-    for(int iL = 0; iL < NLAYER ; ++iL){
-      
-      //Find seed
-      int maxID = -1;
-      double Emax = -1;
-      for(int iH = 0 ; iH < (int)hit_tmp[iL].size(); ++iH){
-	if( hit_tmp[iL].at(iH) > Emax ){
-	  Emax  = hit_tmp[iL].at(iH);
-	  maxID = iH;
-	  E_1[iL] = hit_tmp[iL].at(iH);}}
-      
-      //Dist from seed
-      double dx,dy,dR;
-      for(int iH = 0 ; iH < (int)hit_tmp[iL].size(); ++iH){
-	dx = hit_x[iL].at(iH) - hit_x[iL].at(maxID);
-	dy = hit_y[iL].at(iH) - hit_y[iL].at(maxID);
-	dR = sqrt(dx*dx + dy*dy);
-	if( dR < 1.12455*1.2) E_7[iL] += hit_tmp[iL].at(iH);
-	if( dR < 1.12455*2*1.2) E_19[iL] += hit_tmp[iL].at(iH);
-	if( dR < 1.12455*3*1.2) E_37[iL] += hit_tmp[iL].at(iH);
-	layerE[iL] += hit_tmp[iL].at(iH);}      
-    }
-    outT3->Fill();
-  }
-  outT1->Write();
-  outT2->Write();
-  outT3->Write();
-  outf.Close();
-}
-
 void makePlots::Loop(){
+  
   int NLAYER = 28;
-  double GEVTOMEV = 1000;
+  double ENEPERMIP = 86.5e-03;
 
   Init();
   
-  char title[50],pngtitle[50];
-  if(Is_Data)
-    sprintf(title,"root_plot/%iGeV_%s.root",beamE,beam_str.c_str());    
-  else
-    sprintf(title,"root_plot/%iGeV_%s_MC.root",beamE,beam_str.c_str());
-
+  char title[100];
+  int start = fname.find_last_of("/");
+  int end = fname.find(".root");
+  string f_substr = fname.substr(start+1,end-start-1);
+  sprintf(title,"root_plot/%s_result.root",f_substr.c_str());
+  cout << "output name : " << title << endl;
   TFile outf(title,"recreate");
+  TH1D *h_E1devE7[NLAYER]; 
+  TH1D *h_E7devE19[NLAYER];
 
-  TCanvas *c1 = new TCanvas();
-  TH1D *hEsum = new TH1D("ETotalinMIP","ETotalinMIP",100,0,120000);
-  TH1D *hNhit = new TH1D("Nofhit","Nofhit",200,0,1000);
-  TH1D *hNhit_f5 = new TH1D("Nofhit_first5","Nofhit_f5",40,0,200);
-  TH1D *hNhit_l5 = new TH1D("Nofhit_last5","Nofhit_l5",40,0,200);
-  TH1D *hEratio_f5 = new TH1D("Eratio_first5","Eratio_first5",25,0,100);
-  TH1D *hEratio_l5 = new TH1D("Eratio_last5","Eratio_last5",25,0,50);
-  TH1D *hSHD = new TH1D("SHD","SHD",56,0,28);
-
-
-  vector<vector<double> > hit_tmp(NLAYER);
+  for(int iL = 0; iL < NLAYER ; ++iL){
+    sprintf(title,"layer%i_E1devE7",iL);
+    h_E1devE7[iL] = new TH1D(title,title,101,0,1.01);
+    sprintf(title,"layer%i_E7devE19",iL);
+    h_E7devE19[iL] = new TH1D(title,title,101,0,1.01);
+  }
   
   for(int ev = 0; ev < nevents; ++ev){
     if(ev %10000 == 0) cout << "Processing event: "<< ev << endl;
+ 
     GetData(ev);
-    int Nhits;
-    Nhits = Is_Data ? NRechits : (int)simHitCellIdEE->size();
+    int Nhits = NRechits;
 
     // Event Selection
-    if (Nhits < 200) continue;
-    
-    for(int iL = 0; iL < NLAYER ; ++iL)
-      hit_tmp[iL].clear();
-    
-    int layer;
-    double posx,posy,posz,energy;
-    double ENEPERMIP = 86.5e-03;
-    int Nhit_f5 = 0;
-    int Nhit_l5 = 0;
-    double totalE = 0;
+    if ( Nhits < 200 ) continue;
+    if ( dwcReferenceType != 15) continue;
 
     
-    for(int h = 0; h < Nhits ; ++h){
-      Getinfo(h,layer,posx,posy,posz,energy);
-      if(!Is_Data)
-	energy*=GEVTOMEV;
-      //Hit selection
-      if( energy < 2*ENEPERMIP) continue;
-      //cout << energy/ENEPERMIP << endl;
-      totalE += energy/ENEPERMIP;
-      hit_tmp[layer-1].push_back(energy/ENEPERMIP);    }
-    //getchar();
-    double SHD = 0.;
-    double E_f5 = 0.;
-    double E_l5 = 0.;
     for(int iL = 0; iL < NLAYER ; ++iL){
-      double layerE = 0.;
-      
-      for(int iH = 0 ; iH < (int)hit_tmp[iL].size(); ++iH){
-	if(iL < 5)  Nhit_f5++;
-	if(iL > 22) Nhit_l5++;
-	layerE += hit_tmp[iL].at(iH);
-      }
-      if(iL < 5)  E_f5 += layerE;
-      if(iL > 22) E_l5 += layerE;
-    }
-    hEsum     -> Fill(totalE);
-    hNhit     -> Fill(Nhits);
-    hNhit_f5  -> Fill(Nhit_f5);
-    hNhit_l5  -> Fill(Nhit_l5);
-    hEratio_f5-> Fill(E_f5/totalE*100.);
-    hEratio_l5-> Fill(E_l5/totalE*100.);
-    hSHD      -> Fill(SHD);
+      if( layerE1[iL] != 0){
+	double E1devE7  = layerE1[iL]/layerE7[iL];
+	double E7devE19 = layerE7[iL]/layerE19[iL];
+	h_E1devE7 [iL]->Fill(E1devE7);
+	h_E7devE19[iL]->Fill(E7devE19);}
+
+      //If one wants to do sth with hits
+      vector<double> x,y,z,ene;
+      x   = hit_x->at(iL);
+      y   = hit_y->at(iL);
+      z   = hit_z->at(iL);
+      ene = hit_mip->at(iL);
+      for(int iH = 0; iH < layerNhit[iL] ; ++iH){
+	//cout << ene[iH] << endl;
+      }}
   }
-
-  //Drawing
-  gStyle->SetPalette(54);
-  gStyle->SetOptStat(0);
-  if(Is_Data)
-    hEsum->Draw("error");
-  else
-    hEsum->Draw();
-  c1->Update();
-
-  if(Is_Data)
-    sprintf(pngtitle,"%iGeV_%s_Esum.png",beamE,beam_str.c_str());
-  else
-    sprintf(pngtitle,"%iGeV_%s_Esum_MC.png",beamE,beam_str.c_str());
-  c1->SaveAs(pngtitle);
   
   outf.Write();
   outf.Close();
+  
 }
 
 void makePlots::Event_Display(){
@@ -444,7 +260,7 @@ void makePlots::Event_Display(){
     
     GetData(ev);
     int Nhits;
-    Nhits = Is_Data ? NRechits : (int)simHitCellIdEE->size();
+    Nhits = NRechits;
     //cout << Nhits << endl;
     int layer;
     double posx,posy,posz,energy;
@@ -455,7 +271,7 @@ void makePlots::Event_Display(){
       Getinfo(h,layer,posx,posy,posz,energy);
       totalE += energy/ENEPERMIP;
     }
-    if(totalE >= 140000 && totalE <= 150000 && ev < 10000){
+    if(totalE >= 140000 && ev < 10000){
       counts++;
       for(int h = 0; h < Nhits ; ++h){
 	Getinfo(h,layer,posx,posy,posz,energy);
@@ -463,7 +279,7 @@ void makePlots::Event_Display(){
 	evtdis[layer-1]->Fill(posx,posy,energy/ENEPERMIP);
 	if(layer == 1)
 	  firstL->Fill(posx,posy,energy/ENEPERMIP);
-	//cout << "hello~" << endl;
+
       }
     }
   }
@@ -472,7 +288,7 @@ void makePlots::Event_Display(){
     evtdis[iL]->Draw("colz");
   }
   //c1->Update();
-  sprintf(title,"plots/evt_dis/evt_display_%iavg.png",counts);
+  sprintf(title,"plots/evt_dis/evt_display_%ievts_avg.png",counts);
   //getchar();
   //c1->Update();
 
@@ -483,7 +299,7 @@ void makePlots::Event_Display(){
   c2->Update();
   sprintf(title,"plots/evt_dis/evt_display_1st.png");
   c2->SaveAs(title);
-  cout << "End?!" << endl;
+
   //getchar();
   
 }
