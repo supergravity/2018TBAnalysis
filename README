@@ -1,9 +1,9 @@
 This code read the 2018 June TB rechit ntuple to produce Shower Shape variable
 
 input data file path:
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v8/
+/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v9/
 input MC file path:
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/sim_ntuples/v6
+/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/sim_ntuples/v9
 
 For the run information please refer to:
 https://docs.google.com/spreadsheets/d/1FlwthMixJHmHVBguYSbw5mIeBo2tF7rFJPTYLTNI9Vs/edit#gid=0
