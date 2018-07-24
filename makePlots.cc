@@ -118,7 +118,6 @@ void makePlots::Init(){
   T_Rechit->SetBranchAddress("rechit_layer", &rechit_layer);
   T_Rechit->SetBranchAddress("rechit_chip", &rechit_chip);
   T_Rechit->SetBranchAddress("rechit_channel", &rechit_channel);
-  T_Rechit->SetBranchAddress("rechit_type", &rechit_type);
 
   T_Rechit->SetBranchAddress("rechit_x", &rechit_x);
   T_Rechit->SetBranchAddress("rechit_y", &rechit_y);
@@ -126,19 +125,9 @@ void makePlots::Init(){
   T_Rechit->SetBranchAddress("rechit_iu", &rechit_iu);
   T_Rechit->SetBranchAddress("rechit_iv", &rechit_iv);
   T_Rechit->SetBranchAddress("rechit_energy", &rechit_energy);
-  T_Rechit->SetBranchAddress("rechit_energy_noHG", &rechit_energy_noHG);
 
   T_Rechit->SetBranchAddress("rechit_amplitudeHigh", &rechit_amplitudeHigh);
   T_Rechit->SetBranchAddress("rechit_amplitudeLow", &rechit_amplitudeLow);
-  T_Rechit->SetBranchAddress("rechit_hg_goodFit", &rechit_hg_goodFit);
-  T_Rechit->SetBranchAddress("rechit_lg_goodFit", &rechit_lg_goodFit);
-  T_Rechit->SetBranchAddress("rechit_hg_saturated", &rechit_hg_saturated);
-  T_Rechit->SetBranchAddress("rechit_lg_saturated", &rechit_lg_saturated);
-  T_Rechit->SetBranchAddress("rechit_fully_calibrated", &rechit_fully_calibrated);
-  T_Rechit->SetBranchAddress("rechit_TS2High", &rechit_TS2High);
-  T_Rechit->SetBranchAddress("rechit_TS2Low", &rechit_TS2Low);
-  T_Rechit->SetBranchAddress("rechit_TS3High", &rechit_TS3High);
-  T_Rechit->SetBranchAddress("rechit_TS3Low", &rechit_TS3Low);
     
   T_Rechit->SetBranchAddress("rechit_Tot", &rechit_Tot);
   T_Rechit->SetBranchAddress("rechit_time", &rechit_time);
@@ -146,6 +135,20 @@ void makePlots::Init(){
   T_Rechit->SetBranchAddress("rechit_timeMaxLG", &rechit_timeMaxLG);
   T_Rechit->SetBranchAddress("rechit_toaRise", &rechit_toaRise);
   T_Rechit->SetBranchAddress("rechit_toaFall", &rechit_toaFall);
+
+  if(Is_Data){
+    T_Rechit->SetBranchAddress("rechit_type", &rechit_type);
+    T_Rechit->SetBranchAddress("rechit_energy_noHG", &rechit_energy_noHG);
+    T_Rechit->SetBranchAddress("rechit_hg_goodFit", &rechit_hg_goodFit);
+    T_Rechit->SetBranchAddress("rechit_lg_goodFit", &rechit_lg_goodFit);
+    T_Rechit->SetBranchAddress("rechit_hg_saturated", &rechit_hg_saturated);
+    T_Rechit->SetBranchAddress("rechit_lg_saturated", &rechit_lg_saturated);
+    T_Rechit->SetBranchAddress("rechit_fully_calibrated", &rechit_fully_calibrated);
+    T_Rechit->SetBranchAddress("rechit_TS2High", &rechit_TS2High);
+    T_Rechit->SetBranchAddress("rechit_TS2Low", &rechit_TS2Low);
+    T_Rechit->SetBranchAddress("rechit_TS3High", &rechit_TS3High);
+    T_Rechit->SetBranchAddress("rechit_TS3Low", &rechit_TS3Low);}
+
   
   T_DWC ->SetBranchAddress("ntracks", &ntracks);
   T_DWC->SetBranchAddress("trackChi2_X", &trackChi2_X);
@@ -156,6 +159,8 @@ void makePlots::Init(){
   T_DWC->SetBranchAddress("b_x", &b_x);
   T_DWC->SetBranchAddress("b_y", &b_y);
 
+
+  
   if(Is_Data){
     T_Meta->SetBranchAddress("configuration", &configuration);
     T_Meta->SetBranchAddress("biasCurrentCh0", &biasCurrentCh0);
