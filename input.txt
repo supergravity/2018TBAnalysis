@@ -1,5 +1,1 @@
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v8/ntuple_24.root
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v8/ntuple_25.root
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v8/ntuple_26.root
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v8/ntuple_28.root
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_june/offline_analysis/ntuples/v8/ntuple_29.root
+root_data/ntuplev9_313.root

@@ -65,8 +65,8 @@ class makePlots{
    UInt_t          event;
    UInt_t          run;
    Int_t           pdgID;
-   Double_t        beamEnergy;
-   Double_t        trueBeamEnergy;
+   Float_t        beamEnergy;
+   Float_t        trueBeamEnergy;
    Int_t           NRechits;
    vector<unsigned int> *rechit_detid;
    vector<unsigned int> *rechit_module;
@@ -83,21 +83,21 @@ class makePlots{
    vector<float>   *rechit_energy_noHG;
    vector<float>   *rechit_amplitudeHigh;
    vector<float>   *rechit_amplitudeLow;
-   vector<int>     *rechit_hg_goodFit;
-   vector<int>     *rechit_lg_goodFit;
-   vector<int>     *rechit_hg_saturated;
-   vector<int>     *rechit_lg_saturated;
-   vector<int>     *rechit_fully_calibrated;
+   vector<bool>     *rechit_hg_goodFit;
+   vector<bool>     *rechit_lg_goodFit;
+   vector<bool>     *rechit_hg_saturated;
+   vector<bool>     *rechit_lg_saturated;
+   vector<bool>     *rechit_fully_calibrated;
    vector<float>   *rechit_TS2High;
    vector<float>   *rechit_TS2Low;
    vector<float>   *rechit_TS3High;
    vector<float>   *rechit_TS3Low;
-   vector<float>   *rechit_Tot;
+   vector<unsigned short>   *rechit_Tot;
    vector<float>   *rechit_time;   
    vector<float>   *rechit_timeMaxHG;
    vector<float>   *rechit_timeMaxLG;
-   vector<float>   *rechit_toaRise;
-   vector<float>   *rechit_toaFall;
+   vector<unsigned short>   *rechit_toaRise;
+   vector<unsigned short>   *rechit_toaFall;
 
    // For ImpactPoints (from Delayed wire chamber)
    Int_t           ntracks;

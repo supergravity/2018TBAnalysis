@@ -7,7 +7,7 @@ void makeClass(){
   TApplication *a = new TApplication("a", 0, 0);
   bool data = 1;
   if(data){
-    TFile f("./root_data/data/v8/ntuple_245.root");
+    TFile f("./root_data/ntuplev9_313.root");
     TTree *tt = (TTree *) f.Get("rechitntupler/hits");
     TTree *tt2 = (TTree *) f.Get("trackimpactntupler/impactPoints");
     TTree *tt3 = (TTree *) f.Get("metadatantupler/meta");
@@ -17,8 +17,8 @@ void makeClass(){
     tt3->MakeClass("metadata");    
   }
   else{
-    TFile f("root_data/data/mc_rec/ntuple_sim_pdgID11_beamMomentum100.0_listFTFP.root");
-    TTree *tt = (TTree *) f.Get("");
+    TFile f("root_data/ntuple_sim_pdgID11_beamMomentum100.0_listFTFP_BERT_EMM.root");
+    TTree *tt = (TTree *) f.Get("rechitntupler/hits");
     tt->MakeClass("MC");
   }
 }
