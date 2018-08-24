@@ -14,6 +14,7 @@
 #include "TChain.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TH3.h"
 #include <utility>
 
 //Constructor
@@ -182,6 +183,8 @@ void makePlots::Loop(){
   double *SHD_layer = Set_X0(X0_arr);
   
   Init();
+
+  TCanvas *c1 = new TCanvas();
   
   char title[100];
   int start = fname.find_last_of("/");
@@ -210,6 +213,7 @@ void makePlots::Loop(){
     if ( Nhits < 200 ) continue;
     if ( dwcReferenceType != 15) continue;
 
+    TH3D Evt_dis("","",56,0,28,24,-6,6,24,-6,6);
     
     for(int iL = 0; iL < NLAYER ; ++iL){
       if( layerE1[iL] != 0){
@@ -226,7 +230,13 @@ void makePlots::Loop(){
       ene = hit_mip->at(iL);
       for(int iH = 0; iH < layerNhit[iL] ; ++iH){
 	//cout << ene[iH] << endl;
+	Evt_dis.Fill(SHD_layer[iL],x[iH],y[iH],ene[iH]);
       }}
+    Evt_dis.Draw("BOX2");
+    Evt_dis.SetMarkerSize(0.6);
+    Evt_dis.SetMarkerStyle(20);
+    
+    c1->WaitPrimitive();
   }
   
   outf.Write();
