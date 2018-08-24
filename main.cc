@@ -34,7 +34,7 @@ int main(int argc, char** argv){
   M = new makePlots(chain,chain2,chain3,filename);
 
   //M->Event_Display();
-  M->Loop();
+  M->my_Loop();
   
   return(0);
 }

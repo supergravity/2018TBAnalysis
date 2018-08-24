@@ -23,7 +23,8 @@ class makePlots{
   makePlots( TChain *c1,TChain *c2,TChain *c3,string filename );
  
   ~makePlots();
-  
+
+  void my_Loop();
   void Loop();
   void Event_Display(); //Actually shows the average over some events
 
@@ -52,7 +53,9 @@ class makePlots{
   // Tool functions
   void InitTH2Poly(TH2Poly& poly); //Give frame to TH2Poly
   void root_logon();
+  double* Set_X0(double X0_arr[]);
 
+  
   ///////////////////////////////
   // Declaration of leaf types //
   ///////////////////////////////

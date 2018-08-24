@@ -178,6 +178,9 @@ void makePlots::Loop(){
   int NLAYER = 28;
   double ENEPERMIP = 86.5e-03;
 
+  double X0_arr[28];
+  double *SHD_layer = Set_X0(X0_arr);
+  
   Init();
   
   char title[100];
@@ -189,7 +192,7 @@ void makePlots::Loop(){
   TFile outf(title,"recreate");
   TH1D *h_E1devE7[NLAYER]; 
   TH1D *h_E7devE19[NLAYER];
-
+  
   for(int iL = 0; iL < NLAYER ; ++iL){
     sprintf(title,"layer%i_E1devE7",iL);
     h_E1devE7[iL] = new TH1D(title,title,101,0,1.01);
@@ -331,3 +334,97 @@ void makePlots::InitTH2Poly(TH2Poly& poly)
 
 }
 
+double* makePlots::Set_X0(double X0_arr[]){
+
+  // len["Cu"] = 1.436; //cm                                  
+  // len["W"] = 0.35; //cm                                  
+  // len["Lead"] = 0.56; //cm                               
+  // len["Pb"] = 0.56; //cm                                 
+  // len["CuW"] = 0.43; //cm                                
+  // len["Al"] = 8.897; //cm
+
+  // 4-July-2018
+  // In all the checks done, Pb is 4.9 mm (~0.875 X0) and 
+  // Cu is 6 mm (~0.42 X0)  
+
+  // 10-July-2018
+  // Odd layers have this config: 
+  // Fe(0.3)-Pb(4.9)-Fe(0.3)-Air (4.6) - PCB - Si
+  // Even layers have this config: 
+  // Kapton(0.01)-CuW(1.2)-Cu(6)-CuW-Kapton-Si
+
+  // 17-July-2018
+  // Fe-Pb-Fe-Air-PCB-Si 
+  // Kap-CuW-Cu-CuW-Si
+
+  /*
+  // 17-July-2018
+  1 0.933   2 0.976   3 0.909   4 0.976   5 0.909
+  6 0.976   7 0.909   8 0.976   9 0.909   10 0.976
+  11 0.909  12 0.976  13 0.909  14 0.976  15 0.909
+  16 1.143  17 0.909  18 0.976  19 0.909  20 1.43
+  21 0.909  22 0.976  23 0.909  24 0.976  25 0.909
+  26 0.976  27 0.909  28 0.976
+  */
+  double single_layer_X0[28];
+  for( int i = 0 ; i < 28 ; ++i){
+    if ( i % 2 == 0) single_layer_X0[i] = 0.909;
+    else single_layer_X0[i] = 0.976;
+  }
+  single_layer_X0[0]  = 0.933;
+  single_layer_X0[15] = 1.143;
+  single_layer_X0[19] = 1.43;
+
+  double X0_sum = 0.;
+  for(int iL = 0 ; iL < 28 ; ++iL){
+    X0_sum += single_layer_X0[iL];
+    X0_arr[iL] = X0_sum;
+  }
+  
+  return X0_arr;
+}
+
+void makePlots::my_Loop(){
+  
+  int NLAYER = 28;
+  double ENEPERMIP = 86.5e-03;
+
+  double X0_arr[NLAYER];
+  double *X0_layer = Set_X0(X0_arr);
+  
+  Init();
+  
+  char title[100];
+  sprintf(title,"Etotal vs SHD");
+  TH2D *cut_plot = new TH2D(title,title,112,0,28,150,0,15000);
+  
+  for(int ev = 0; ev < nevents; ++ev){
+    if(ev %10000 == 0) cout << "Processing event: "<< ev << endl;
+ 
+    GetData(ev);
+    int Nhits = NRechits;
+
+    // Event Selection
+    if ( Nhits < 200 ) continue;
+    if ( dwcReferenceType != 15) continue;
+
+    double SHD_Elayer = 0;
+
+    for(int iL = 0 ; iL < NLAYER ; ++iL){
+      SHD_Elayer += X0_layer[iL]*layerE[iL];}
+    SHD_Elayer /= totalE;
+    //cout << SHD_Elayer << " , " << totalE << endl;
+    cut_plot->Fill(SHD_Elayer,totalE);
+    
+  }
+  gStyle->SetOptStat(0);
+
+  TCanvas *c1 = new TCanvas();
+  cut_plot->Draw("colz");
+  cut_plot->SetXTitle("SHD_Elayer");
+  cut_plot->SetYTitle("Energy(mip)");
+  cut_plot->GetYaxis()->SetTitleOffset(1.4);
+  c1->Update();
+  c1->WaitPrimitive();
+  
+}
