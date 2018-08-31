@@ -56,7 +56,8 @@ class makePlots{
   // Tool functions
   void InitTH2Poly(TH2Poly& poly); //Give frame to TH2Poly
   void root_logon();
-
+  double* Set_X0(double X0_arr[]);
+  
   ///////////////////////////////
   // Declaration of leaf types //
   ///////////////////////////////
