@@ -30,6 +30,7 @@ class makePlots{
 
   
   //member
+  bool Is_Data;
   int  beamE;
   int  PID; // 0 for electron, 1 for pion, 2 for muon
   string beam_str; // "Ele","Pi","Mu"

@@ -155,7 +155,11 @@ void makePlots::Init_Runinfo(){
     cout << "unknown PDGID QQ" << endl;
     beam_str = "??";
     PID = -1;}
-
+  size_t found = fname.find("MC");
+  if( found != std::string::npos )
+    Is_Data = 0;
+  else
+    Is_Data = 1;
   cout << beam_str.c_str()  << " , "<< beamE << "GeV\n" << endl;
 }
 
@@ -407,6 +411,8 @@ void makePlots::my_Loop(){
   char title[100];
   sprintf(title,"Etotal vs SHD");
   TH2D *cut_plot = new TH2D(title,title,112,0,28,150,0,15000);
+  sprintf(title,"Etotal vs Nhits");  
+  TH2D *cut_plot2 = new TH2D(title,title,150,0,1500,150,0,15000);
   
   for(int ev = 0; ev < nevents; ++ev){
     if(ev %10000 == 0) cout << "Processing event: "<< ev << endl;
@@ -415,7 +421,7 @@ void makePlots::my_Loop(){
     int Nhits = NRechits;
 
     // Event Selection
-    if ( Nhits < 200 ) continue;
+    //if ( Nhits < 200 ) continue;
     if ( dwcReferenceType != 15) continue;
 
     double SHD_Elayer = 0;
@@ -425,6 +431,7 @@ void makePlots::my_Loop(){
     SHD_Elayer /= totalE;
     //cout << SHD_Elayer << " , " << totalE << endl;
     cut_plot->Fill(SHD_Elayer,totalE);
+    cut_plot2->Fill(Nhits,totalE);
     
   }
   gStyle->SetOptStat(0);
@@ -435,6 +442,24 @@ void makePlots::my_Loop(){
   cut_plot->SetYTitle("Energy(mip)");
   cut_plot->GetYaxis()->SetTitleOffset(1.4);
   c1->Update();
-  c1->WaitPrimitive();
+  //c1->WaitPrimitive();
+  char png_title[100];
+  string MC_Data;
+  if(Is_Data)
+    MC_Data = "Data";
+  else
+    MC_Data = "MC";
+  sprintf(png_title,"Etotal vs SHD_%s%s_%i.png",MC_Data.c_str(),beam_str.c_str(),beamE);
+
+  
+  c1->SaveAs(png_title);
+  cut_plot2->Draw("colz");
+  cut_plot2->SetXTitle("Nhits");
+  cut_plot2->SetYTitle("Energy(mip)");
+  cut_plot2->GetYaxis()->SetTitleOffset(1.4);
+  c1->Update();
+  //c1->WaitPrimitive();
+  sprintf(png_title,"Etotal vs Nhits_%s%s_%i.png",MC_Data.c_str(),beam_str.c_str(),beamE);
+  c1->SaveAs(png_title);
   
 }
