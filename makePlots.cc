@@ -364,7 +364,6 @@ void makePlots::Loop(){
     
     int layer;
     double posx,posy,posz,energy;
-    double ENEPERMIP = 86.5e-03;
     int Nhit_f5 = 0;
     int Nhit_l5 = 0;
     double totalE = 0;
@@ -372,13 +371,10 @@ void makePlots::Loop(){
     
     for(int h = 0; h < Nhits ; ++h){
       Getinfo(h,layer,posx,posy,posz,energy);
-      if(!Is_Data)
-	energy*=GEVTOMEV;
       //Hit selection
-      if( energy < 2*ENEPERMIP) continue;
-      //cout << energy/ENEPERMIP << endl;
-      totalE += energy/ENEPERMIP;
-      hit_tmp[layer-1].push_back(energy/ENEPERMIP);    }
+      if( energy < 2) continue; // 2 mip cut ->not sure for 2018 June TB
+      totalE += energy;
+      hit_tmp[layer-1].push_back(energy);    }
     //getchar();
     double SHD = 0.;
     double E_f5 = 0.;
