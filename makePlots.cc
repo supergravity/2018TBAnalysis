@@ -177,6 +177,8 @@ void makePlots::Loop(){
   
   int NLAYER = 28;
   double ENEPERMIP = 86.5e-03;
+  double X0_arr[28];
+  double *SHD_layer = Set_X0(X0_arr);
 
   Init();
   
@@ -209,6 +211,7 @@ void makePlots::Loop(){
 
     
     for(int iL = 0; iL < NLAYER ; ++iL){
+      //Fill shower shape histogram
       if( layerE1[iL] != 0){
 	double E1devE7  = layerE1[iL]/layerE7[iL];
 	double E7devE19 = layerE7[iL]/layerE19[iL];
@@ -224,6 +227,15 @@ void makePlots::Loop(){
       for(int iH = 0; iH < layerNhit[iL] ; ++iH){
 	//cout << ene[iH] << endl;
       }}
+
+    // Calculate the shower depth
+    double SHD_Elayer = 0;
+    
+    for(int iL = 0 ; iL < NLAYER ; ++iL){
+      SHD_Elayer += X0_layer[iL]*layerE[iL];}
+    SHD_Elayer /= totalE;
+    // shower depth = SHD_Elayer
+    
   }
   
   outf.Write();
